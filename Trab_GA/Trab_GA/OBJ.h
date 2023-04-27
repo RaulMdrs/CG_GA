@@ -3,25 +3,41 @@
 #include <fstream>
 #include <string>
 #include <GL\glew.h>
+#include "Vertex.cpp"
+#include <glm/glm.hpp>
+#include "LeitorOBJ.h"
 
-class Obj {
+class OBJ {
 public:
-    std::vector<GLfloat> vertices;
-    std::vector<GLfloat>  normals;
-    std::vector<GLfloat>  textures;
-    std::vector<GLint> faces;   
+    OBJ() {}
 
-    LeitorOBJ lerObj;
+    bool carregarArquivo(const std::string& filename) {
+        std::vector<glm::vec3> vertices;
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec2> texCoords;
+        std::vector<unsigned int> indices;
 
-    void render() {
-        // Render the object using the data in the class's member variables
-        // ...
+        LeitorOBJ leitorOBJ;
+        bool resultado = leitorOBJ.lerArquivo(filename, vertices, normals, texCoords, indices);
+
+        if (resultado) {
+            m_Vertices = vertices;
+            m_Indices = indices;
+            return true;
+        }
+
+        return false;
     }
 
-    void translate(float x, float y, float z) {
-        // Apply a translation to the object's vertices
-        // ...
+    const std::vector<glm::vec3>& getVertices() const {
+        return m_Vertices;
     }
 
-    // Other methods for manipulating the object's data can be added as needed
+    const std::vector<unsigned int>& getIndices() const {
+        return m_Indices;
+    }
+
+private:
+    std::vector<glm::vec3> m_Vertices;
+    std::vector<unsigned int> m_Indices;
 };

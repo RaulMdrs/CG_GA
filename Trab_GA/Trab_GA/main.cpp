@@ -5,10 +5,6 @@
 
 int main() {
 
-    system("PAUSE");
-
-    return 0;
-
 	System system;
 
 	if (system.GLFWInit() != 0) {

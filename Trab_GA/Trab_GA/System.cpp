@@ -63,7 +63,7 @@ int System::OpenGLSetup()
 
 int System::SystemSetup()
 {
-
+	cout << "deuSETUP?";
 	coreShader = Shader("Shaders/Core/core.vert", "Shaders/Core/core.frag");
 	coreShader.Use();
 
@@ -72,6 +72,16 @@ int System::SystemSetup()
 
 void System::Run()
 {
+	cout << "deuRUN?";
+
+	coreShader.Use();
+
+
+	OBJ modelo;
+	LeitorOBJ leitorOBJ;
+
+	modelo.carregarArquivo("cube.obj");
+
 
 	glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);
 	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -84,47 +94,28 @@ void System::Run()
 
 	coreShader.Use();
 
-	LeitorOBJ lerOBJ;
-	Obj objeto;
-
-	objeto = lerOBJ.LerOBJ("cube");
-
-	coreShader.LoadTexture("images/woodTexture.jpg", "texture1", "woodTexture");
-
-	GLfloat vertices[] =
-	{
-		// Positions         // Textures
-
-		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // Top Right
-		 0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // Bottom Right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // Bottom Left
-
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // Bottom Left
-		-0.5f,  0.5f, 0.0f,   0.0f, 1.0f, // Top Left
-		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // Top Right
-	};
-
-	GLuint VBO, VAO;
-	glGenVertexArrays(1, &VAO);
+	// Criação do buffer de vértices
+	GLuint VBO;
 	glGenBuffers(1, &VBO);
-
-	// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
-	glBindVertexArray(VAO);
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, modelo.getVertices().size() * sizeof(Vertex), &modelo.getVertices()[0], GL_STATIC_DRAW);
 
-	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	// Criação do buffer de índices
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, modelo.getIndices().size() * sizeof(unsigned int), &modelo.getIndices()[0], GL_STATIC_DRAW);
+
+	// Criação do Vertex Array Object (VAO)
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
-	// Texture attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
 
-	glBindVertexArray(0); // Unbind VAO
-
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)) 
+	{
 
 		glfwPollEvents();
 
@@ -136,21 +127,13 @@ void System::Run()
 
 #pragma endregion
 
-		//mexer a camera
-		/*viewMatrix = camera.GetViewMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(glm::value_ptr(viewMatrix));*/
-
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		coreShader.Use();
 
-		coreShader.UseTexture("woodTexture");
-
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
+		glDrawElements(GL_TRIANGLES, modelo.getIndices().size(), GL_UNSIGNED_INT, 0);
 
 
 		glfwSwapBuffers(window);

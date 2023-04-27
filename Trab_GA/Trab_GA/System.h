@@ -23,7 +23,7 @@
 #include "Shader.h"
 #include "AssetManager.h"
 #include "Time.h"
-#include "LeitorOBJ.h"
+#include "OBJ.h"
 #include "Camera.h"
 
 class System
