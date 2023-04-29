@@ -3,18 +3,14 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="OBJ.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="System.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Vertex.h" />
     <ClInclude Include="Model.h" />
   </ItemGroup>
   <ItemGroup>

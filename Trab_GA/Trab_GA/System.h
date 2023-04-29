@@ -1,6 +1,8 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
+#pragma once
+
 // Internal
 #include <iostream>
 #include <string>

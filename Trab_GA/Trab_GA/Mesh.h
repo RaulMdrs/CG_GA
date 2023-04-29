@@ -7,11 +7,26 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <GL\glew.h>
-#include "Vertex.h"
+//#include "Vertex.h"
 #include "Texture.h"
 #include "Shader.h"
 
 using namespace std;
+
+#define MAX_BONE_INFLUENCE 4
+
+struct Vertex
+{
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 textCoord;
+	glm::vec3 tangent;
+	glm::vec3 biTangent;
+
+	int m_BoneIds[MAX_BONE_INFLUENCE];
+	float m_Weigths[MAX_BONE_INFLUENCE];
+};
+
 
 class Mesh {
 public:

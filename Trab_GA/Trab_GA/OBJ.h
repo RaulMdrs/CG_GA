@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <GL\glew.h>
-#include "Vertex.cpp"
 #include <glm/glm.hpp>
 #include "LeitorOBJ.h"
 
