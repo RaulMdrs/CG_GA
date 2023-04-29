@@ -16,9 +16,14 @@
 class Shader
 {
 public:
+	unsigned int ID;
 	GLuint program;
 	std::map<std::string, Texture> textures;
 	GLint textureQtd;
+
+	void SetInt(const std::string& name, int value) const {
+		glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+	};
 
 public:
 	Shader() { textureQtd = 0; }

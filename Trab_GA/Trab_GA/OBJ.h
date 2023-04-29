@@ -14,11 +14,11 @@ public:
     bool carregarArquivo(const std::string& filename) {
         std::vector<glm::vec3> vertices;
         std::vector<glm::vec3> normals;
-        std::vector<glm::vec2> texCoords;
+        std::vector<glm::vec2> textureCoords;
         std::vector<unsigned int> indices;
 
         LeitorOBJ leitorOBJ;
-        bool resultado = leitorOBJ.lerArquivo(filename, vertices, normals, texCoords, indices);
+        bool resultado = leitorOBJ.lerArquivo(filename, vertices, normals, textureCoords, indices);
 
         if (resultado) {
             m_Vertices = vertices;

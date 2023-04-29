@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="System.cpp" />
+    <ClCompile Include="Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="OBJ.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Model.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Core\core.frag" />
+    <None Include="Shaders\Core\core.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{61eeb18e-0fd4-4c07-81c0-0c5101947d58}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
