@@ -1,33 +1,16 @@
-#pragma once
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-// Internal
-#include <iostream>
-#include <string>
-#include <stdio.h>
-#include <stdlib.h>
-#include <chrono>
-#include <math.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-// External Libs
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
-#include <SOIL.h>
-
-// GLM Includes
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
-
-// Headers
+#include <filesystem>
 #include "Shader.h"
-#include "AssetManager.h"
-#include "Time.h"
-#include "OBJ.h"
 #include "Camera.h"
-#include "stb_image.h"
 #include "Model.h"
 
-using namespace std;
+#include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -84,19 +67,9 @@ int main()
         std::cout << "Failed no init GLEW." << std::endl;
         return EXIT_FAILURE;
     }
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    /*if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }*/
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-
     //stbi_set_flip_vertically_on_load(true);
-
-    
 
     // configure global opengl state
     // -----------------------------
@@ -134,7 +107,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
-        ourShader.Use();
+        ourShader.use();
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -217,28 +190,3 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
-
-//
-//#define EXIT_FAILURE -1
-//#define EXIT_SUCCESS 0
-//
-//int main() {
-//
-//	System system;
-//
-//	if (system.GLFWInit() != 0) {
-//		return EXIT_FAILURE;
-//	}
-//	if (system.OpenGLSetup() != 0) {
-//		return EXIT_FAILURE;
-//	}
-//	if (system.SystemSetup() != 0) {
-//		return EXIT_FAILURE;
-//	}
-//
-//	system.Run();
-//
-//	system.Finish();
-//
-//	return EXIT_SUCCESS;
-//}

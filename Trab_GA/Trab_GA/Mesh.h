@@ -20,8 +20,8 @@ struct Vertex
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 textCoord;
-	glm::vec3 tangent;
-	glm::vec3 biTangent;
+	//glm::vec3 tangent;
+	//glm::vec3 biTangent;
 
 	int m_BoneIds[MAX_BONE_INFLUENCE];
 	float m_Weigths[MAX_BONE_INFLUENCE];
@@ -61,7 +61,7 @@ public:
 				number = std::to_string(specularNr++);
 			}
 
-			shader.SetInt(("material." + name + number).c_str(), i);
+			shader.setInt(("material." + name + number).c_str(), i);
 
 			glBindTexture(GL_TEXTURE_2D, textures[i].GetTextureId());
 		}
