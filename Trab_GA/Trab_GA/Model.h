@@ -1,11 +1,14 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "stb_image.h"
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
@@ -118,16 +121,16 @@ private:
                 vec.x = mesh->mTextureCoords[0][i].x;
                 vec.y = mesh->mTextureCoords[0][i].y;
                 vertex.textCoord = vec;
-                //// tangent
-                //vector.x = mesh->mTangents[i].x;
-                //vector.y = mesh->mTangents[i].y;
-                //vector.z = mesh->mTangents[i].z;
-                //vertex.tan = vector;
-                //// bitangent
-                //vector.x = mesh->mBitangents[i].x;
-                //vector.y = mesh->mBitangents[i].y;
-                //vector.z = mesh->mBitangents[i].z;
-                //vertex.bitangent = vector;
+                // tangent
+                vector.x = mesh->mTangents[i].x;
+                vector.y = mesh->mTangents[i].y;
+                vector.z = mesh->mTangents[i].z;
+                vertex.tangent = vector;
+                // bitangent
+                vector.x = mesh->mBitangents[i].x;
+                vector.y = mesh->mBitangents[i].y;
+                vector.z = mesh->mBitangents[i].z;
+                vertex.biTangent = vector;
             }
             else
                 vertex.textCoord = glm::vec2(0.0f, 0.0f);
@@ -191,8 +194,8 @@ private:
             if (!skip)
             {   // if texture hasn't been loaded already, load it
                 Texture texture;
-                texture.SetID(TextureFromFile(str.C_Str(), this->directory));
-                texture.SetType(typeName);
+                texture.id = TextureFromFile(str.C_Str(), this->directory);
+                texture.type = typeName;
                 texture.path = str.C_Str();
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.

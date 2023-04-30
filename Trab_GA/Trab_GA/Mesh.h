@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -8,7 +9,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <GL\glew.h>
 //#include "Vertex.h"
-#include "Texture.h"
+//#include "Texture.h"
 #include "Shader.h"
 
 using namespace std;
@@ -20,11 +21,17 @@ struct Vertex
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 textCoord;
-	//glm::vec3 tangent;
-	//glm::vec3 biTangent;
+	glm::vec3 tangent;
+	glm::vec3 biTangent;
 
 	int m_BoneIds[MAX_BONE_INFLUENCE];
 	float m_Weigths[MAX_BONE_INFLUENCE];
+};
+
+struct Texture {
+	unsigned int id;
+	string type;
+	string path;
 };
 
 
@@ -52,7 +59,7 @@ public:
 		for (unsigned int i = 0; i < textures.size(); i++) {
 			glActiveTexture(GL_TEXTURE0 + i);
 			string number;
-			string name = textures[i].GetType();
+			string name = textures[i].type;
 
 			if (name == "texture_diffuse") {
 				number = std::to_string(diffuseNr++);
@@ -63,7 +70,7 @@ public:
 
 			shader.setInt(("material." + name + number).c_str(), i);
 
-			glBindTexture(GL_TEXTURE_2D, textures[i].GetTextureId());
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
 
 		glActiveTexture(GL_TEXTURE0);
