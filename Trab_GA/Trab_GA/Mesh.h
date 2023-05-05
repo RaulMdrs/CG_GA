@@ -21,11 +21,11 @@ struct Vertex
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 textCoord;
-	glm::vec3 tangent;
-	glm::vec3 biTangent;
+	//glm::vec3 tangent;
+	//glm::vec3 biTangent;
 
-	int m_BoneIds[MAX_BONE_INFLUENCE];
-	float m_Weigths[MAX_BONE_INFLUENCE];
+	//int m_BoneIds[MAX_BONE_INFLUENCE];
+	//float m_Weigths[MAX_BONE_INFLUENCE];
 };
 
 struct Texture {
@@ -40,12 +40,10 @@ public:
 
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
-	vector<Texture> textures;
 
-	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures) {
+	Mesh(vector<Vertex> vertices, vector<unsigned int> indices) {
 		this->vertices = vertices;
 		this->indices = indices;
-		this->textures = textures;
 
 		setupMesh();
 	}
@@ -53,28 +51,6 @@ public:
 	~Mesh() {};
 	
 	void Draw(Shader& shader) {
-		unsigned int diffuseNr = 1;
-		unsigned int specularNr = 1;
-
-		for (unsigned int i = 0; i < textures.size(); i++) {
-			glActiveTexture(GL_TEXTURE0 + i);
-			string number;
-			string name = textures[i].type;
-
-			if (name == "texture_diffuse") {
-				number = std::to_string(diffuseNr++);
-			}
-			else if (name == "texture_specular") {
-				number = std::to_string(specularNr++);
-			}
-
-			shader.setInt(("material." + name + number).c_str(), i);
-
-			glBindTexture(GL_TEXTURE_2D, textures[i].id);
-		}
-
-		glActiveTexture(GL_TEXTURE0);
-		
 		//Draw mesh
 
 		glBindVertexArray(VAO);
