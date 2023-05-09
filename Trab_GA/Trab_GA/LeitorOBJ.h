@@ -35,7 +35,7 @@ static Mesh loadOBJ(const char* filename)
 	vector<GLint> vertex_texCoord_indi;
 	vector<GLint> vertex_normal_indi;
     
-    vector<Texture> texture;
+    vector<Texture> textures;
 
     bool tudoFuiLido = false;
 
@@ -62,7 +62,7 @@ static Mesh loadOBJ(const char* filename)
            
             tudoFuiLido = true;
           
-            cout << vertex.position.x << " " << vertex.position.y << " " << vertex.position.z << endl;
+            //cout << vertex.position.x << " " << vertex.position.y << " " << vertex.position.z << endl;
 
         }
         else if (prefix == "vt") {
@@ -75,7 +75,7 @@ static Mesh loadOBJ(const char* filename)
 
             tudoFuiLido = true;
 
-            cout << vertex.textCoord.x << " " << vertex.textCoord.y << " " << endl;
+            //cout << vertex.textCoord.x << " " << vertex.textCoord.y << " " << endl;
         }
         else if (prefix == "vn") {
             ss >> vector.x >> vector.y >> vector.z;
@@ -86,8 +86,10 @@ static Mesh loadOBJ(const char* filename)
 
             tudoFuiLido = true;
 
-            cout << vertex.normal.x << " " << vertex.normal.y << " " << vertex.normal.z << endl;
+            //cout << vertex.normal.x << " " << vertex.normal.y << " " << vertex.normal.z << endl;
         }
+
+        //vertices.push_back(vertex);
 
         if (tudoFuiLido)
         {
@@ -99,8 +101,9 @@ static Mesh loadOBJ(const char* filename)
             int counter = 0;
             while (ss >> temp_glint)
             {
+                indices.push_back(temp_glint);
 
-                if (counter > 11)
+               /* if (counter > 11)
                 {
                     cout << endl;
                 }
@@ -119,7 +122,7 @@ static Mesh loadOBJ(const char* filename)
                 {
                     vertex_normal_indi.push_back(temp_glint);
 
-                }
+                }*/
 
                 if (ss.peek() == '/')
                 {
@@ -174,28 +177,28 @@ static Mesh loadOBJ(const char* filename)
     }
     in_file.close();
 
-    std::cout << "Vertices Tam:" << vertices.size() << std::endl;
+    //std::cout << "Vertices Tam:" << vertices.size() << std::endl;
 
-    std::cout << "Vertices:" << std::endl;
+    //std::cout << "Vertices:" << std::endl;
 
-    
+    //
 
-    for (unsigned int i = 0; i < vertices.size(); i++) {
+    //for (unsigned int i = 0; i < vertices.size(); i++) {
 
-        if (i < 8)
-        {
+    //    if (i < 8)
+    //    {
 
-            std::cout << vertices[i].position.x << ", " << vertices[i].position.y << ", " << vertices[i].position.z << std::endl;
-        }
-        else if (i < 22)
-        {
-            std::cout << vertices[i].textCoord.x << ", " << vertices[i].textCoord.y << std::endl;
-        }
-        else
-        {
-            std::cout << vertices[i].normal.x << ", " << vertices[i].normal.y << ", " << vertices[i].normal.z << std::endl;
-        }
-    }
+    //        std::cout << vertices[i].position.x << ", " << vertices[i].position.y << ", " << vertices[i].position.z << std::endl;
+    //    }
+    //    else if (i < 22)
+    //    {
+    //        std::cout << vertices[i].textCoord.x << ", " << vertices[i].textCoord.y << std::endl;
+    //    }
+    //    else
+    //    {
+    //        std::cout << vertices[i].normal.x << ", " << vertices[i].normal.y << ", " << vertices[i].normal.z << std::endl;
+    //    }
+    //}
 
     // imprime a lista de faces
     //std::cout << "Faces:" << std::endl;
@@ -209,6 +212,6 @@ static Mesh loadOBJ(const char* filename)
     }*/
 
 
-    return Mesh(vertices, indices);
+    return Mesh(vertices, indices, textures);
 
 }

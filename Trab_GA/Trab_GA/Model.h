@@ -4,7 +4,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
@@ -16,6 +15,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "LeitorOBJ.h"
+#include "Texture.h"
 
 #include <string>
 #include <fstream>
@@ -124,16 +124,16 @@ private:
                 vec.x = mesh->mTextureCoords[0][i].x;
                 vec.y = mesh->mTextureCoords[0][i].y;
                 vertex.textCoord = vec;
-            //    // tangent
-            //    vector.x = mesh->mTangents[i].x;
-            //    vector.y = mesh->mTangents[i].y;
-            //    vector.z = mesh->mTangents[i].z;
-            //    vertex.tangent = vector;
-            //    // bitangent
-            //    vector.x = mesh->mBitangents[i].x;
-            //    vector.y = mesh->mBitangents[i].y;
-            //    vector.z = mesh->mBitangents[i].z;
-            //    vertex.biTangent = vector;
+                // tangent
+                vector.x = mesh->mTangents[i].x;
+                vector.y = mesh->mTangents[i].y;
+                vector.z = mesh->mTangents[i].z;
+                vertex.tangent = vector;
+                // bitangent
+                vector.x = mesh->mBitangents[i].x;
+                vector.y = mesh->mBitangents[i].y;
+                vector.z = mesh->mBitangents[i].z;
+                vertex.biTangent = vector;
             }
             else
                 vertex.textCoord = glm::vec2(0.0f, 0.0f);
@@ -158,20 +158,20 @@ private:
         // normal: texture_normalN
 
         // 1. diffuse maps
-        //vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        //textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        //// 2. specular maps
-        //vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        //textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        //// 3. normal maps
-        //std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        //textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        //// 4. height maps
-        //std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-        //textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        // 2. specular maps
+        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        // 3. normal maps
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        // 4. height maps
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
         // return a mesh object created from the extracted mesh data
-        return Mesh(vertices, indices);
+        return Mesh(vertices, indices, textures);
     }
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
@@ -197,8 +197,8 @@ private:
             if (!skip)
             {   // if texture hasn't been loaded already, load it
                 Texture texture;
-                texture.id = TextureFromFile(str.C_Str(), this->directory);
-                texture.type = typeName;
+                texture.SetID(TextureFromFile(str.C_Str(), this->directory));
+                texture.SetType(typeName);
                 texture.path = str.C_Str();
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.

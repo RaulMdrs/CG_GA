@@ -1,4 +1,3 @@
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -12,6 +11,7 @@
 #include "Model.h"
 
 #include <iostream>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -70,7 +70,7 @@ int main()
     }
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
+    //stbi_set_flip_vertically_on_load(true);
 
     // configure global opengl state
     // -----------------------------
@@ -79,6 +79,7 @@ int main()
     // build and compile shaders
     // -------------------------
     Shader ourShader("1.model_loading.vs", "1.model_loading.fs");
+    //Shader ourShader("core.vert", "core.frag");
 
     // load models
     // -----------
@@ -104,7 +105,7 @@ int main()
 
         // render
         // ------
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(0.05f, 0.5f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
@@ -119,7 +120,7 @@ int main()
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
