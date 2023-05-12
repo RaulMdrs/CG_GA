@@ -81,7 +81,7 @@ public:
 		//glBindVertexArray(0);
 
 		glBindVertexArray(VAO);
-
+		glVertexPointer(3, GL_TRIANGLES, 0, &position);
 		// Bind and enable vertex position buffer
 		glBindBuffer(GL_ARRAY_BUFFER, VBO_V);
 		glEnableVertexAttribArray(0);
@@ -98,7 +98,6 @@ public:
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 		glDrawArrays(GL_TRIANGLES, 0, position.size());
-
 
 		// Disable vertex attribute arrays
 		glDisableVertexAttribArray(0);

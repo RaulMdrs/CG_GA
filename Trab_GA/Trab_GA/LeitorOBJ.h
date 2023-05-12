@@ -29,22 +29,29 @@ static Mesh loadOBJ(const char* filename)
 	vector<glm::vec3> vertex_pos;
 	vector<glm::vec2> vertex_texCoord;
 	vector<glm::vec3> vertex_normal;
+
+ // Vetores temporarios
     vector<glm::vec3> vertex_pos_temp;
     vector<glm::vec2> vertex_texCoord_temp;
     vector<glm::vec3> vertex_normal_temp;
 
-
-    vector<unsigned int> indices;
+    // indices
 	vector<GLint> vertex_pos_indi;
 	vector<GLint> vertex_texCoord_indi;
 	vector<GLint> vertex_normal_indi;
     
+    // indices temporarios 
+    vector<GLint> vertex_pos_indi_temp;
+    vector<GLint> vertex_texCoord_indi_temp;
+    vector<GLint> vertex_normal_indi_temp;
+
     vector<Texture> textures;
 
     bool tudoFuiLido = false;
-
+    int countLines = 0;
+    vector<int> quadriLine;
     GLint temp_glint = 0;
-
+    int counterDoCounter = 0;
 	stringstream ss;
 	std::ifstream in_file(filename);
     std::string line = "";
@@ -98,14 +105,15 @@ static Mesh loadOBJ(const char* filename)
 
                 if (counter == 0)
                 {
-                    vertex_pos_indi.push_back(temp_glint - 1);
+                    counterDoCounter++;
+                    vertex_pos_indi_temp.push_back(temp_glint - 1);
                 }
                 if (counter == 1) {
-                    vertex_texCoord_indi.push_back(temp_glint - 1);
+                    vertex_texCoord_indi_temp.push_back(temp_glint - 1);
                     
                 }
                 else if (counter == 2) {
-                    vertex_normal_indi.push_back(temp_glint - 1);
+                    vertex_normal_indi_temp.push_back(temp_glint - 1);
                 }
 
                 if (ss.peek() == '/')
@@ -122,95 +130,49 @@ static Mesh loadOBJ(const char* filename)
                 
             }
 
+            if (counterDoCounter == 4) {
 
-           /* vertices.resize(vertex_pos_indi.size(), Vertex());
+                ///teste
 
-            for (size_t i = 0; i < vertices.size(); i++)
-            {
-                vertices[i].position = vertex_pos[vertex_pos_indi[i]];
-                vertices[i].normal = vertex_normal[vertex_normal_indi[i]];
-                vertices[i].textCoord = vertex_texCoord[vertex_texCoord_indi[i]];
-            }*/
+                //for (int i = 0; i < 2; i++) {
+                //    if (i)
+                //}
 
-            //std::string faceToken;
-            //std::vector<std::string> faceTokens;
-            //while (ss >> faceToken) {
-            //    faceTokens.push_back(faceToken);
-            //}
-            //for (unsigned int i = 0; i < faceTokens.size(); i++) {
-            //    std::string vertexToken = faceTokens[i];
-            //    std::istringstream vertexIss(vertexToken);
-            //    std::string vertexIndexToken;
-            //    std::vector<std::string> vertexIndexTokens;
-            //    while (std::getline(vertexIss, vertexIndexToken, '/')) {
-            //        vertexIndexTokens.push_back(vertexIndexToken);
-            //    }
-            //    int vertexIndex = std::stoi(vertexIndexTokens[0]) - 1;
-            //    int texCoordIndex = std::stoi(vertexIndexTokens[1]) - 1;
-            //    int normalIndex = std::stoi(vertexIndexTokens[2]) - 1;
+                ///
+                for (unsigned int i = 0; i < 3; i++) {
+                    vertex_pos_indi.push_back(vertex_pos_indi_temp[i]);
+                    vertex_normal_indi.push_back(vertex_normal_indi_temp[i]);
+                    vertex_texCoord_indi.push_back(vertex_texCoord_indi_temp[i]);
+                }
 
-            //    indices.push_back(vertexIndex);
-            //    //indices.push_back(normalIndex);
-            //    //indices.push_back(texCoordIndex);
-            //}
+                for (unsigned int i = 0; i <= 3; i++) {
+                    if (i != 1) {
+                        vertex_pos_indi.push_back(vertex_pos_indi_temp[i]);
+                        vertex_normal_indi.push_back(vertex_normal_indi_temp[i]);
+                        vertex_texCoord_indi.push_back(vertex_texCoord_indi_temp[i]);
+                    }
+                }
+
+                counterDoCounter = 0;
+            }
+            else {
+                for (unsigned int i = 0; i < 3; i++) {
+                    vertex_pos_indi.push_back(vertex_pos_indi_temp[i]);
+                    vertex_normal_indi.push_back(vertex_normal_indi_temp[i]);
+                    vertex_texCoord_indi.push_back(vertex_texCoord_indi_temp[i]);
+                }
+            }
+
+            vertex_texCoord_indi_temp.clear();
+            vertex_normal_indi_temp.clear();
+            vertex_pos_indi_temp.clear();
         }
+
+        countLines++;
     }
     in_file.close();
 
-   /* for (unsigned int i = 0; i < vertex_pos_indi.size(); i+=3)
-    {
-        cout << vertex_pos_indi[i] << ", " << vertex_pos_indi[i + 1] << ", " << vertex_pos_indi[i + 2] << endl;
-    }
 
-    for (unsigned int i = 0; i < vertex_normal_indi.size(); i += 3)
-    {
-        cout << vertex_normal_indi[i] << ", " << vertex_normal_indi[i + 1] << ", " << vertex_normal_indi[i + 2] << endl;
-    }*/
-
-    //std::cout << "Vertices Tam:" << vertices.size() << std::endl;
-
-    //std::cout << "Vertices:" << std::endl;
-
-    //
-
-    //for (unsigned int i = 0; i < vertices.size(); i++) {
-
-    //    if (i < 8)
-    //    {
-
-    //        std::cout << vertices[i].position.x << ", " << vertices[i].position.y << ", " << vertices[i].position.z << std::endl;
-    //    }
-    //    else if (i < 22)
-    //    {
-    //        std::cout << vertices[i].textCoord.x << ", " << vertices[i].textCoord.y << std::endl;
-    //    }
-    //    else
-    //    {
-    //        std::cout << vertices[i].normal.x << ", " << vertices[i].normal.y << ", " << vertices[i].normal.z << std::endl;
-    //    }
-    //}
-
-    // imprime a lista de faces
-    //std::cout << "Faces:" << std::endl;
-    //for (unsigned int i = 0; i < indices.size(); i += 3) {
-    //    std::cout << indices[i] << ", " << indices[i + 1] << ", " << indices[i + 2] << ", " << std::endl;
-    //}
-
-    /*  std::cout << "Texture:" << std::endl;
-    for (unsigned int i = 0; i < objeto.textures.size(); i += 4) {
-        std::cout << objeto.textures[i] << ", " << objeto.textures[i + 1] << ", " << objeto.textures[i + 2] << ", " << objeto.textures[i + 3] << std::endl;
-    }*/
-
-
-    /*cout << "Tamanho do vetor de vertices temporario " << vertex_pos_temp.size() << endl;
-    cout << "Tamanho do vetor de indices dos vertices " << vertex_pos_indi.size() << endl;
-
-    cout << vertex_normal_temp.size() << endl;
-    cout << vertex_texCoord_temp.size() << endl;*/
-
-    cout << vertex_pos_indi.size() << endl;
-    cout << vertex_normal_indi.size() << endl;
-    cout << vertex_texCoord_indi.size() << endl;
 
     for (unsigned int i = 0; i < vertex_pos_indi.size(); i++)
     {
@@ -231,8 +193,6 @@ static Mesh loadOBJ(const char* filename)
             << " " << vertex_texCoord_temp[vertex_texCoord_indi[i]].y << endl;*/
     }
 
-
-    //return Mesh(vertices, indices, textures);
     return Mesh(vertex_pos, vertex_normal, vertex_texCoord, textures);
 
 }
