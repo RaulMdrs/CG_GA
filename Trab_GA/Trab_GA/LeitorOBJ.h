@@ -25,10 +25,10 @@ using namespace std;
 
 static Mesh loadOBJ(const char* filename)
 {
-    vector<Vertex> vertices;
-	vector<glm::fvec3> vertex_pos;
-	vector<glm::fvec2> vertex_texCoord;
-	vector<glm::fvec3> vertex_normal;
+   // vector<Vertex> vertices;
+	vector<glm::vec3> vertex_pos;
+	vector<glm::vec2> vertex_texCoord;
+	vector<glm::vec3> vertex_normal;
 
     vector<unsigned int> indices;
 	vector<GLint> vertex_pos_indi;
@@ -51,19 +51,12 @@ static Mesh loadOBJ(const char* filename)
         ss.str(line);
 
         ss >> prefix;
-        Vertex vertex;
         glm::vec3 vector;
 
         if (prefix == "v") {
             ss >> vector.x >> vector.y >> vector.z;
 
-            vertex.position = vector;
             vertex_pos.push_back(vector);
-           
-            tudoFuiLido = true;
-          
-            //cout << vertex.position.x << " " << vertex.position.y << " " << vertex.position.z << endl;
-
         }
         else if (prefix == "vt") {
             glm::vec2 vec;
@@ -71,62 +64,36 @@ static Mesh loadOBJ(const char* filename)
 
             vertex_texCoord.push_back(vec);
 
-            vertex.textCoord = vec;
 
             tudoFuiLido = true;
 
-            //cout << vertex.textCoord.x << " " << vertex.textCoord.y << " " << endl;
         }
         else if (prefix == "vn") {
             ss >> vector.x >> vector.y >> vector.z;
-            vertex.normal = vector;
 
             vertex_normal.push_back(vector);
 
-
             tudoFuiLido = true;
 
-            //cout << vertex.normal.x << " " << vertex.normal.y << " " << vertex.normal.z << endl;
-        }
-
-        //vertices.push_back(vertex);
-
-        if (tudoFuiLido)
-        {
-            vertices.push_back(vertex);
-            tudoFuiLido = false;
         }
 
         if (prefix == "f") {
             int counter = 0;
             while (ss >> temp_glint)
             {
-                indices.push_back(temp_glint);
+                vertex_pos_indi.push_back(temp_glint);
 
-               /* if (counter > 11)
-                {
-                    cout << endl;
-                }
-                cout << temp_glint << " " << endl;;
-
-                if (counter == 0)
-                {
-                    vertex_pos_indi.push_back(temp_glint);
-                }
-                else if (counter == 1)
-                {
-                    vertex_texCoord_indi.push_back(temp_glint);
-
-                }
-                else if (counter == 2)
-                {
+                if (counter == 1) {
                     vertex_normal_indi.push_back(temp_glint);
-
-                }*/
+                }
+                else if (counter == 2) {
+                    vertex_texCoord_indi.push_back(temp_glint);
+                }
 
                 if (ss.peek() == '/')
                 {
                     counter++;
+                    /*vertex_pos_.push_back(temp_glint);*/
                     ss.ignore(1, ' ');
                 }
                 else if (ss.peek() == ' ')
@@ -135,10 +102,6 @@ static Mesh loadOBJ(const char* filename)
                     ss.ignore(1, ' ');
                 }
 
-                //if (counter > 2)
-                //{
-                //    counter = 0;
-                //}
             }
 
 
@@ -212,6 +175,7 @@ static Mesh loadOBJ(const char* filename)
     }*/
 
 
-    return Mesh(vertices, indices, textures);
+    //return Mesh(vertices, indices, textures);
+    return Mesh(vertex_pos, vertex_normal, vertex_texCoord, textures);
 
 }

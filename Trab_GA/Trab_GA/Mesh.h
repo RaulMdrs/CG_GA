@@ -15,17 +15,17 @@ using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
 
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec2 textCoord;
-	glm::vec3 tangent;
-	glm::vec3 biTangent;
-
-	int m_BoneIds[MAX_BONE_INFLUENCE];
-	float m_Weigths[MAX_BONE_INFLUENCE];
-};
+//struct Vertex
+//{
+//	glm::vec3 position;
+//	glm::vec3 normal;
+//	glm::vec2 textCoord;
+//	glm::vec3 tangent;
+//	glm::vec3 biTangent;
+//
+//	int m_BoneIds[MAX_BONE_INFLUENCE];
+//	float m_Weigths[MAX_BONE_INFLUENCE];
+//};
 
 //struct Texture {
 //	unsigned int id;
@@ -36,13 +36,15 @@ struct Vertex
 class Mesh {
 public:
 
-	vector<Vertex> vertices;
-	vector<unsigned int> indices;
-	vector<Texture> textures;
+	vector<glm::vec3> position;
+	vector<glm::vec3> normal;
+	vector<glm::vec2> textCoord;
 
-	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures) {
-		this->vertices = vertices;
-		this->indices = indices;
+	vector<Texture> textures;
+	Mesh(vector<glm::vec3> position, vector< glm::vec3> normal, vector<glm::vec2> textCoord, vector<Texture> textures) {
+		this->position = position;
+		this->normal = normal;
+		this->textCoord = textCoord;
 		this->textures = textures;
 		setupMesh();
 	}
@@ -65,7 +67,7 @@ public:
 				number = std::to_string(specularNr++);
 			}
 
-			shader.setInt(("material." + name + number).c_str(), i);
+			//shader.setInt(("material." + name + number).c_str(), i);
 
 			glBindTexture(GL_TEXTURE_2D, textures[i].GetTextureId());
 		}
@@ -73,42 +75,81 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 		
 		//Draw mesh
+		//glBindVertexArray(VAO);
+		//glDrawElements(GL_TRIANGLES, textCoord.size() + normal.size() + position.size(), GL_UNSIGNED_INT, 0);
+		/*glDrawArrays(GL_TRIANGLES, 0, textCoord.size() + normal.size() + position.size());*/
+		//glBindVertexArray(0);
+
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
+		// Bind and enable vertex position buffer
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_V);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// Bind and enable vertex normal buffer
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// Bind and enable vertex texture coordinate buffer
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glDrawArrays(GL_TRIANGLES, 0, position.size() * 8);
+
+
+		// Disable vertex attribute arrays
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 		glBindVertexArray(0);
 	}
 
 
 private:
-	unsigned int VAO, VBO, EBO;
-	
+	unsigned int VAO;
+	unsigned int VBO_V, VBO_N, VBO_T;
 
 	void setupMesh() {
 		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-		glGenBuffers(1, &EBO);
+		glGenBuffers(1, &VBO_V);
+		glGenBuffers(1, &VBO_N);
+		glGenBuffers(1, &VBO_T);
+	
 
 		glBindVertexArray(VAO);
 
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0],GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
 		//vertex position
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_V);
+		glBufferData(GL_ARRAY_BUFFER, position.size() * sizeof(glm::vec3), &position[0],GL_STATIC_DRAW);
+		cout << position.size();
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+		glDisableVertexAttribArray(0);
 
 		//vertex normals
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
+		glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+		glDisableVertexAttribArray(1);
 
 		//vertex texture coords
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
+		glBufferData(GL_ARRAY_BUFFER, textCoord.size() * sizeof(glm::vec2), &textCoord[0], GL_STATIC_DRAW);
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textCoord));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+		glDisableVertexAttribArray(2);
 
 		glBindVertexArray(0);
+
+
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
 	}
 };
 
