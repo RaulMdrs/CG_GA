@@ -29,6 +29,10 @@ static Mesh loadOBJ(const char* filename)
 	vector<glm::vec3> vertex_pos;
 	vector<glm::vec2> vertex_texCoord;
 	vector<glm::vec3> vertex_normal;
+    vector<glm::vec3> vertex_pos_temp;
+    vector<glm::vec2> vertex_texCoord_temp;
+    vector<glm::vec3> vertex_normal_temp;
+
 
     vector<unsigned int> indices;
 	vector<GLint> vertex_pos_indi;
@@ -47,6 +51,8 @@ static Mesh loadOBJ(const char* filename)
     std::string prefix = "";
 
     while (std::getline(in_file, line)) {
+
+
         ss.clear();
         ss.str(line);
 
@@ -56,13 +62,17 @@ static Mesh loadOBJ(const char* filename)
         if (prefix == "v") {
             ss >> vector.x >> vector.y >> vector.z;
 
-            vertex_pos.push_back(vector);
+            //cout << vector.x << " " << vector.y << " " << vector.z << endl;
+
+            vertex_pos_temp.push_back(vector);
+
+            //cout << vertex_pos_temp[0].x << " " << vertex_pos_temp[0].y << " " << vertex_pos_temp[0].z << endl;
         }
         else if (prefix == "vt") {
             glm::vec2 vec;
             ss >> vec.x >> vec.y;
 
-            vertex_texCoord.push_back(vec);
+            vertex_texCoord_temp.push_back(vec);
 
 
             tudoFuiLido = true;
@@ -71,7 +81,7 @@ static Mesh loadOBJ(const char* filename)
         else if (prefix == "vn") {
             ss >> vector.x >> vector.y >> vector.z;
 
-            vertex_normal.push_back(vector);
+            vertex_normal_temp.push_back(vector);
 
             tudoFuiLido = true;
 
@@ -81,13 +91,21 @@ static Mesh loadOBJ(const char* filename)
             int counter = 0;
             while (ss >> temp_glint)
             {
-                vertex_pos_indi.push_back(temp_glint);
+                if (counter > 2)
+                {
+                    counter = 0;
+                }
 
+                if (counter == 0)
+                {
+                    vertex_pos_indi.push_back(temp_glint - 1);
+                }
                 if (counter == 1) {
-                    vertex_normal_indi.push_back(temp_glint);
+                    vertex_texCoord_indi.push_back(temp_glint - 1);
+                    
                 }
                 else if (counter == 2) {
-                    vertex_texCoord_indi.push_back(temp_glint);
+                    vertex_normal_indi.push_back(temp_glint - 1);
                 }
 
                 if (ss.peek() == '/')
@@ -101,7 +119,7 @@ static Mesh loadOBJ(const char* filename)
                     counter++;
                     ss.ignore(1, ' ');
                 }
-
+                
             }
 
 
@@ -131,7 +149,6 @@ static Mesh loadOBJ(const char* filename)
             //    int texCoordIndex = std::stoi(vertexIndexTokens[1]) - 1;
             //    int normalIndex = std::stoi(vertexIndexTokens[2]) - 1;
 
-
             //    indices.push_back(vertexIndex);
             //    //indices.push_back(normalIndex);
             //    //indices.push_back(texCoordIndex);
@@ -139,6 +156,16 @@ static Mesh loadOBJ(const char* filename)
         }
     }
     in_file.close();
+
+   /* for (unsigned int i = 0; i < vertex_pos_indi.size(); i+=3)
+    {
+        cout << vertex_pos_indi[i] << ", " << vertex_pos_indi[i + 1] << ", " << vertex_pos_indi[i + 2] << endl;
+    }
+
+    for (unsigned int i = 0; i < vertex_normal_indi.size(); i += 3)
+    {
+        cout << vertex_normal_indi[i] << ", " << vertex_normal_indi[i + 1] << ", " << vertex_normal_indi[i + 2] << endl;
+    }*/
 
     //std::cout << "Vertices Tam:" << vertices.size() << std::endl;
 
@@ -173,6 +200,36 @@ static Mesh loadOBJ(const char* filename)
     for (unsigned int i = 0; i < objeto.textures.size(); i += 4) {
         std::cout << objeto.textures[i] << ", " << objeto.textures[i + 1] << ", " << objeto.textures[i + 2] << ", " << objeto.textures[i + 3] << std::endl;
     }*/
+
+
+    /*cout << "Tamanho do vetor de vertices temporario " << vertex_pos_temp.size() << endl;
+    cout << "Tamanho do vetor de indices dos vertices " << vertex_pos_indi.size() << endl;
+
+    cout << vertex_normal_temp.size() << endl;
+    cout << vertex_texCoord_temp.size() << endl;*/
+
+    cout << vertex_pos_indi.size() << endl;
+    cout << vertex_normal_indi.size() << endl;
+    cout << vertex_texCoord_indi.size() << endl;
+
+    for (unsigned int i = 0; i < vertex_pos_indi.size(); i++)
+    {
+        vertex_pos.push_back(vertex_pos_temp[vertex_pos_indi[i]]);
+        vertex_normal.push_back(vertex_normal_temp[vertex_normal_indi[i]]);
+        //vertex_texCoord.push_back(vertex_texCoord_temp[vertex_texCoord_indi[i]]);
+
+        /*cout << "Passei a " << i << " vez pelo for" << endl;
+        cout << "Coloquei o indice do vertex_pos_indi: " << vertex_pos_indi[i] << " que e o vetor: " << vertex_pos_temp[vertex_pos_indi[i]].x 
+            << " " << vertex_pos_temp[vertex_pos_indi[i]].y << " " << vertex_pos_temp[vertex_pos_indi[i]].z << endl;*/
+    }
+    for (unsigned int i = 0; i < vertex_texCoord_indi.size(); i++)
+    {
+        vertex_texCoord.push_back(vertex_texCoord_temp[vertex_texCoord_indi[i]]);
+
+        /*cout << "Passei a " << i << " vez pelo for" << endl;
+        cout << "Coloquei o indice do vertex_texCoord_indi: " << vertex_texCoord_indi[i] << " que e o vetor: " << vertex_texCoord_temp[vertex_texCoord_indi[i]].x
+            << " " << vertex_texCoord_temp[vertex_texCoord_indi[i]].y << endl;*/
+    }
 
 
     //return Mesh(vertices, indices, textures);

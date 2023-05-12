@@ -97,7 +97,7 @@ public:
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		glDrawArrays(GL_TRIANGLES, 0, position.size() * 8);
+		glDrawArrays(GL_TRIANGLES, 0, position.size());
 
 
 		// Disable vertex attribute arrays

@@ -83,7 +83,7 @@ int main()
 
     // load models
     // -----------
-    Model ourModel("Modelos/cube.obj");
+    Model ourModel("Modelos/pyramid.obj");
 
 
     // draw in wireframe
