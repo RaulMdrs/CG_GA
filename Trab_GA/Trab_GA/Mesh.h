@@ -87,15 +87,30 @@ public:
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		// Bind and enable vertex normal buffer
-		glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		// Bind and enable vertex normal buffer Bind and enable vertex texture coordinate buffer
+		if (normal.size() > 0 && textCoord.size() > 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-		// Bind and enable vertex texture coordinate buffer
-		glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+		else if (normal.size() == 0 && textCoord.size() > 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+		else if (normal.size() > 0 && textCoord.size() == 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		}
+		
 
 		glDrawArrays(GL_TRIANGLES, 0, position.size());
 
@@ -130,20 +145,42 @@ private:
 		glDisableVertexAttribArray(0);
 
 		//vertex normals
-		glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
-		glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
-		glDisableVertexAttribArray(1);
+		if (normal.size() > 0 && textCoord.size() > 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
+			glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+			glDisableVertexAttribArray(1);
 
-		//vertex texture coords
-		glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
-		glBufferData(GL_ARRAY_BUFFER, textCoord.size() * sizeof(glm::vec2), &textCoord[0], GL_STATIC_DRAW);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
-		glDisableVertexAttribArray(2);
+			//vertex texture coords
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
+			glBufferData(GL_ARRAY_BUFFER, textCoord.size() * sizeof(glm::vec2), &textCoord[0], GL_STATIC_DRAW);
+			glEnableVertexAttribArray(2);
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+			glDisableVertexAttribArray(2);
 
-		glBindVertexArray(0);
+			glBindVertexArray(0);
+		}
+		else if (normal.size() == 0 && textCoord.size() > 0)
+		{
+			//vertex texture coords
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
+			glBufferData(GL_ARRAY_BUFFER, textCoord.size() * sizeof(glm::vec2), &textCoord[0], GL_STATIC_DRAW);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+			glDisableVertexAttribArray(1);
+
+			glBindVertexArray(0);
+		}	
+		else if (normal.size() > 0 && textCoord.size() == 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, VBO_N);
+			glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+			glDisableVertexAttribArray(1);
+		}
 
 
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

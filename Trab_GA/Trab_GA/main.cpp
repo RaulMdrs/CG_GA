@@ -83,7 +83,14 @@ int main()
 
     // load models
     // -----------
-    Model ourModel("Modelos/cube.obj");
+    //Model ourModel("Modelos/cube.obj");
+    
+    Model ourTeapot("Modelos/teapot1.obj");
+    Model ourCube("Modelos/cube.obj");
+    Model ourBackpack("Modelos/backpack.obj");
+    Model ourTower("Modelos/torreDiPisa.obj");
+    Model ourTrout("Modelos/trout.obj");
+
 
 
     // draw in wireframe
@@ -118,11 +125,49 @@ int main()
         ourShader.setMat4("view", view);
 
         // render the loaded model
+        //glm::mat4 model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        ////model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        //ourShader.setMat4("model", model);
+        //ourModel.Draw(ourShader);
+
+        // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        ourTeapot.Draw(ourShader);
+
+        glm::mat4 model1 = glm::mat4(1.0f);
+        model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f)); // translate it down so it's at the center of the scene
+        model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model1);
+        ourCube.Draw(ourShader);
+
+        glm::mat4 model2 = glm::mat4(1.0f);
+        model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f)); // translate it down so it's at the center of the scene
+        model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model2);
+        ourBackpack.Draw(ourShader);
+
+        glm::mat4 model3 = glm::mat4(1.0f);
+        model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));    // it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model3);
+        ourTower.Draw(ourShader);
+
+        glm::mat4 model4 = glm::mat4(1.0f);
+        model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));    // it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model4);
+        ourTrout.Draw(ourShader);
+
+        // teste
+        //glm::mat4 model2 = glm::mat4(1.0f);
+        //model2 = glm::translate(model2, glm::vec3(5.0f, 0.0f, 1.0f));
+        ////model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
+        //ourShader.setMat4("model2", model2);
+        //ourModel2.Draw(ourShader);
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
