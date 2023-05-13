@@ -7,31 +7,12 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <GL\glew.h>
-//#include "Vertex.h"
 #include "Texture.h"
 #include "Shader.h"
 
 using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
-
-//struct Vertex
-//{
-//	glm::vec3 position;
-//	glm::vec3 normal;
-//	glm::vec2 textCoord;
-//	glm::vec3 tangent;
-//	glm::vec3 biTangent;
-//
-//	int m_BoneIds[MAX_BONE_INFLUENCE];
-//	float m_Weigths[MAX_BONE_INFLUENCE];
-//};
-
-//struct Texture {
-//	unsigned int id;
-//	string type;
-//	string path;
-//};
 
 class Mesh {
 public:
@@ -67,18 +48,10 @@ public:
 				number = std::to_string(specularNr++);
 			}
 
-			//shader.setInt(("material." + name + number).c_str(), i);
-
 			glBindTexture(GL_TEXTURE_2D, textures[i].GetTextureId());
 		}
 
 		glActiveTexture(GL_TEXTURE0);
-		
-		//Draw mesh
-		//glBindVertexArray(VAO);
-		//glDrawElements(GL_TRIANGLES, textCoord.size() + normal.size() + position.size(), GL_UNSIGNED_INT, 0);
-		/*glDrawArrays(GL_TRIANGLES, 0, textCoord.size() + normal.size() + position.size());*/
-		//glBindVertexArray(0);
 
 		glBindVertexArray(VAO);
 		glVertexPointer(3, GL_TRIANGLES, 0, &position);
@@ -181,11 +154,6 @@ private:
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
 			glDisableVertexAttribArray(1);
 		}
-
-
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
 	}
 };
 

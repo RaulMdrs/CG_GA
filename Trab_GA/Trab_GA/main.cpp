@@ -17,6 +17,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+void createBullet(Shader& shader, Model &obj);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -79,19 +80,18 @@ int main()
     // build and compile shaders
     // -------------------------
     Shader ourShader("1.model_loading.vs", "1.model_loading.fs");
-    //Shader ourShader("core.vert", "core.frag");
 
     // load models
     // -----------
-    //Model ourModel("Modelos/cube.obj");
     
     Model ourTeapot("Modelos/teapot1.obj");
     Model ourCube("Modelos/cube.obj");
+    Model ourBullet("Modelos/cube.obj");
     Model ourBackpack("Modelos/backpack.obj");
     Model ourTower("Modelos/torreDiPisa.obj");
     Model ourTrout("Modelos/trout.obj");
 
-
+    int timeBullet = 0;
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -108,6 +108,7 @@ int main()
 
         // input
         // -----
+        //processInput(window, ourShader, ourCube);
         processInput(window);
 
         // render
@@ -125,53 +126,64 @@ int main()
         ourShader.setMat4("view", view);
 
         // render the loaded model
-        //glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        ////model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        //ourShader.setMat4("model", model);
-        //ourModel.Draw(ourShader);
-
-        // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
         ourShader.setMat4("model", model);
         ourTeapot.Draw(ourShader);
 
         glm::mat4 model1 = glm::mat4(1.0f);
-        model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f)); // translate it down so it's at the center of the scene
-        model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
+        model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f));
+        model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
         ourShader.setMat4("model", model1);
         ourCube.Draw(ourShader);
 
+        glm::mat4 model1Bullet = glm::mat4(1.0f);
+        model1Bullet = glm::translate(model1Bullet, glm::vec3(5.0f, 0.0f, 5.0f));
+        model1Bullet = glm::scale(model1Bullet, glm::vec3(0.5f, 0.5f, 0.5f));
+        ourShader.setMat4("model", model1Bullet);
+        ourBullet.Draw(ourShader);
+
         glm::mat4 model2 = glm::mat4(1.0f);
-        model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f)); // translate it down so it's at the center of the scene
-        model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));    // it's a bit too big for our scene, so scale it down
+        model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f));
+        model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));
         ourShader.setMat4("model", model2);
         ourBackpack.Draw(ourShader);
 
         glm::mat4 model3 = glm::mat4(1.0f);
-        model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));    // it's a bit too big for our scene, so scale it down
+        model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f));
+        model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));
         ourShader.setMat4("model", model3);
         ourTower.Draw(ourShader);
 
         glm::mat4 model4 = glm::mat4(1.0f);
-        model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));    // it's a bit too big for our scene, so scale it down
+        model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f));
+        model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));
         ourShader.setMat4("model", model4);
         ourTrout.Draw(ourShader);
 
-        // teste
-        //glm::mat4 model2 = glm::mat4(1.0f);
-        //model2 = glm::translate(model2, glm::vec3(5.0f, 0.0f, 1.0f));
-        ////model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
-        //ourShader.setMat4("model2", model2);
-        //ourModel2.Draw(ourShader);
 
+        glm::mat4 bullet = glm::mat4(1.0f);
+        bullet = glm::translate(bullet, glm::vec3(15.0f, -5.0f, 0.0f)); // setar uma position 
+        bullet = glm::scale(bullet, glm::vec3(0.2f, 0.2f, 0.2f));
+        ourShader.setMat4("model", bullet);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
+
+        if (glfwGetMouseButton(window, 0) == GLFW_PRESS) {
+            timeBullet = 1000;
+
+        }
+
+        if (timeBullet > 0) {
+            glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f);
+         //   bullet = 
+
+            timeBullet -= 1 * deltaTime;
+            ourCube.Draw(ourShader);
+        }
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -182,13 +194,15 @@ int main()
     return 0;
 }
 
+void createBullet(Shader& shader, Model &obj){
+    
+}
+
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
-{
+ void processInput(GLFWwindow* window){
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -237,3 +251,4 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
+
