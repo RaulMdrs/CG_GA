@@ -33,6 +33,8 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+glm::vec3 lightPos(0.0f, 20.0f, 0.0f);
+
 int main()
 {
     // glfw: initialize and configure
@@ -90,18 +92,30 @@ int main()
     Model ourBackpack("Modelos/backpack.obj");
     Model ourTower("Modelos/torreDiPisa.obj");
     Model ourTrout("Modelos/trout.obj");
-
     int timeBullet = 0;
 
-    // draw in wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    ///// Teste de luz abaixo
+
+    //unsigned int VBO;
+    //glGenBuffers(1, &VBO);
+
+    //unsigned int lightCubeVAO;
+    //glGenVertexArrays(1, &lightCubeVAO);
+    //glBindVertexArray(lightCubeVAO);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //// note that we update the lamp's position attribute's stride to reflect the updated buffer data
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    ///// Teste de luz acima
+
 
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
-        // --------------------
+// --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -116,14 +130,45 @@ int main()
         glClearColor(0.05f, 0.5f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
+
+        // TESTE LuZZZZZZZZZZZZZZZZZZ
         ourShader.use();
+        ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("lightPos", lightPos);
+        ourShader.setVec3("viewPos", camera.Position);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
+
+        // world transformation
+        glm::mat4 modeLight = glm::mat4(1.0f);
+        ourShader.setMat4("model", modeLight);
+
+       // criar o ponto de luz
+        modeLight = glm::mat4(1.0f);
+        modeLight = glm::translate(modeLight, lightPos);
+        modeLight = glm::scale(modeLight, glm::vec3(0.2f)); // a smaller cube
+
+      //  glBindVertexArray(lightCubeVAO);
+       // glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+
+        // TESTE LuZZZZZZZZZZZZZZZZZZ ^^^^^^
+
+
+        // don't forget to enable shader before setting uniforms
+      //  ourShader.use();
+
+        // view/projection transformations
+      //  glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+       // glm::mat4 view = camera.GetViewMatrix();
+        //ourShader.setMat4("projection", projection);
+     //   ourShader.setMat4("view", view);
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
