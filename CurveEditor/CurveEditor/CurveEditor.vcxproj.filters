@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Points.cpp" />
+    <ClCompile Include="CurveControl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Points.h" />
+    <ClInclude Include="CurveControl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Core\core.frag" />
+    <None Include="Shaders\Core\core.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{61eeb18e-0fd4-4c07-81c0-0c5101947d58}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
