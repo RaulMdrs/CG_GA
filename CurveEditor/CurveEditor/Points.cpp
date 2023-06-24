@@ -5,6 +5,10 @@ Points::Points()
 	controlPoints = std::vector<glm::vec3>();
 }
 
+Points::~Points()
+{
+}
+
 std::vector<glm::vec3> Points::GetControlPoints()
 {
 	return controlPoints;

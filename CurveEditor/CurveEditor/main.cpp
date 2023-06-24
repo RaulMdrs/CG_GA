@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Points.h"
+#include "CurveControl.h"
 
 #include <iostream>
 
@@ -17,10 +18,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
+float ConvertToCartesian(float value, float min, float max);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1000;
+const unsigned int SCR_HEIGHT = 900;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -30,6 +32,11 @@ bool firstMouse = true;
 
 //Points
 Points points;
+
+Shader* ourShader;
+CurveControl* curveControl = new CurveControl();
+
+bool teste = false;
 
 int main()
 {
@@ -77,26 +84,40 @@ int main()
 
 	// build and compile shaders
 	// -------------------------
-	Shader ourShader("1.model_loading.vs", "1.model_loading.fs");
+	ourShader = new Shader("1.model_loading.vs", "1.model_loading.fs");
+
+	ourShader->use();
+
+	curveControl->InitializeVAOVBO();
+
+	GLuint VAO = 0;
 
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
-
 		processInput(window);
 
 		// render
 		// ------
-		glClearColor(0.05f, 0.5f, 0.05f, 1.0f);
+		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// view/projection transformations
-		glm::mat4 projection = glm::ortho(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 ortho = glm::ortho(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
-		ourShader.setMat4("projection", projection);
-		ourShader.setMat4("view", view);
+		ourShader->setMat4("ortho", ortho);
+		ourShader->setMat4("view", view);
+		
+		ourShader->use();
+		ourShader->setVec3("color", glm::vec3(1.0f, 1.0f, 1.0f));
+
+		VAO = curveControl->CreateLines(points, ourShader);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_LINE_STRIP, 0, points.GetControlPoints().size());
+		glDrawArrays(GL_POINTS, 0, points.GetControlPoints().size());
+		glBindVertexArray(0);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -118,15 +139,12 @@ void processInput(GLFWwindow* window) {
 		glfwSetWindowShouldClose(window, true);
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
-		points.AddControlPoint(glm::vec3(lastX, lastY, 1));
-		std::cout << "Mouse button pressed in " << lastX << " , " << lastY << std::endl;
-	}
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-	{
-		for (int i = 0; i < points.GetControlPoints().size(); i++)
-		{
-			std::cout << "Control point " << i << " : " << points.GetControlPoints()[i].x << " , " << points.GetControlPoints()[i].y << std::endl;
-		}
+		float x = 0, y = 0;
+		x = ConvertToCartesian(lastX, 0, SCR_WIDTH);
+		y = ConvertToCartesian(lastY, 0 , SCR_HEIGHT) * -1;
+	
+		points.AddControlPoint(glm::vec3(x, y, 0));
+		std::cout << "Mouse button pressed in " << x << " , " << y << std::endl;
 	}
 
 }
@@ -169,3 +187,16 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
+float ConvertToCartesian(float value, float rangeMin, float rangeMax) {
+	// Calcula a diferença entre o valor máximo e mínimo do intervalo
+	float range = rangeMax - rangeMin;
+
+	// Calcula a metade do intervalo
+	float halfRange = range / 2.0f;
+
+	// Calcula o valor central do intervalo
+	float center = (rangeMax + rangeMin) / 2.0f;
+
+	// Aplica a fórmula de conversão
+	return ((value - center) / halfRange);
+}

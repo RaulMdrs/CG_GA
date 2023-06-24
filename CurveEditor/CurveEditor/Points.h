@@ -11,14 +11,18 @@
 
 class Points
 {
-	std::vector<glm::vec3> controlPoints;
+
 
 public:
 
 	Points();
+	~Points();
+
 
 	std::vector<glm::vec3> GetControlPoints();
 
 	void AddControlPoint(glm::vec3 point);
+
+	std::vector<glm::vec3> controlPoints;
 };
 
