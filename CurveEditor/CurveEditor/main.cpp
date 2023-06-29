@@ -37,7 +37,7 @@ Shader* ourShader;
 CurveControl* curveControl = new CurveControl();
 
 bool teste = false;
-
+GLuint VAO = 0, VAOBSpline = 0;
 int main()
 {
 	// glfw: initialize and configure
@@ -90,12 +90,13 @@ int main()
 
 	curveControl->InitializeVAOVBO();
 
-	GLuint VAO = 0;
+
 
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
+		glfwPollEvents();
 		// per-frame time logic
 		processInput(window);
 
@@ -113,16 +114,23 @@ int main()
 		ourShader->use();
 		ourShader->setVec3("color", glm::vec3(1.0f, 1.0f, 1.0f));
 
-		VAO = curveControl->CreateLines(points, ourShader);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_LINE_STRIP, 0, points.GetControlPoints().size());
 		glDrawArrays(GL_POINTS, 0, points.GetControlPoints().size());
 		glBindVertexArray(0);
 
+		if (points.GetControlPoints().size() > 4) {
+			ourShader->setVec3("color", glm::vec3(0.0f, 1.0f, 0.0f));
+			VAOBSpline = curveControl->BsplineToVBO();
+			glBindVertexArray(VAOBSpline);
+			glDrawArrays(GL_LINE_STRIP, 0, points.GetControlPoints().size() / 3);
+			glBindVertexArray(0);
+		}
+
+
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
@@ -144,6 +152,11 @@ void processInput(GLFWwindow* window) {
 		y = ConvertToCartesian(lastY, 0 , SCR_HEIGHT) * -1;
 	
 		points.AddControlPoint(glm::vec3(x, y, 0));
+		VAO = curveControl->CreateLines(points);
+
+		if (points.GetControlPoints().size() > 4)
+			curveControl->CreateBSPline(points);
+
 		std::cout << "Mouse button pressed in " << x << " , " << y << std::endl;
 	}
 
