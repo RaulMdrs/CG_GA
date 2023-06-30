@@ -86,12 +86,13 @@ int main()
     // load models
     // -----------
     
-    Model ourTeapot("Modelos/teapot1.obj");
-    Model ourCube("Modelos/cube.obj");
-    Model ourBullet("Modelos/cube.obj");
-    Model ourBackpack("Modelos/backpack.obj");
-    Model ourTower("Modelos/torreDiPisa.obj");
-    Model ourTrout("Modelos/trout.obj");
+    //Model ourTeapot("Modelos/teapot1.obj");
+    //Model ourCube("Modelos/cube.obj");
+    //Model ourBullet("Modelos/cube.obj");
+    //Model ourBackpack("Modelos/backpack.obj");
+    //Model ourTower("Modelos/torreDiPisa.obj");
+    //Model ourTrout("Modelos/trout.obj");
+    Model ourPista("Modelos/track.obj");
     int timeBullet = 0;
 
     ///// Teste de luz abaixo
@@ -171,47 +172,53 @@ int main()
      //   ourShader.setMat4("view", view);
 
         // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-        ourShader.setMat4("model", model);
-        ourTeapot.Draw(ourShader);
+        glm::mat4 pista = glm::mat4(1.0f);
+        pista = glm::translate(pista, glm::vec3(0.0f, -0.5f, 0.0f));
+        pista = glm::scale(pista, glm::vec3(1.0f, 0.5f, 1.0f));
+        ourShader.setMat4("model", pista);
+        ourPista.Draw(ourShader);
 
-        glm::mat4 model1 = glm::mat4(1.0f);
-        model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f));
-        model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
-        ourShader.setMat4("model", model1);
-        ourCube.Draw(ourShader);
+        //glm::mat4 model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        //ourShader.setMat4("model", model);
+        //ourTeapot.Draw(ourShader);
 
-        glm::mat4 model1Bullet = glm::mat4(1.0f);
-        model1Bullet = glm::translate(model1Bullet, glm::vec3(5.0f, 0.0f, 5.0f));
-        model1Bullet = glm::scale(model1Bullet, glm::vec3(0.5f, 0.5f, 0.5f));
-        ourShader.setMat4("model", model1Bullet);
-        ourBullet.Draw(ourShader);
+        //glm::mat4 model1 = glm::mat4(1.0f);
+        //model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f));
+        //model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
+        //ourShader.setMat4("model", model1);
+        //ourCube.Draw(ourShader);
 
-        glm::mat4 model2 = glm::mat4(1.0f);
-        model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f));
-        model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));
-        ourShader.setMat4("model", model2);
-        ourBackpack.Draw(ourShader);
+        //glm::mat4 model1Bullet = glm::mat4(1.0f);
+        //model1Bullet = glm::translate(model1Bullet, glm::vec3(5.0f, 0.0f, 5.0f));
+        //model1Bullet = glm::scale(model1Bullet, glm::vec3(0.5f, 0.5f, 0.5f));
+        //ourShader.setMat4("model", model1Bullet);
+        //ourBullet.Draw(ourShader);
 
-        glm::mat4 model3 = glm::mat4(1.0f);
-        model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f));
-        model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));
-        ourShader.setMat4("model", model3);
-        ourTower.Draw(ourShader);
+        //glm::mat4 model2 = glm::mat4(1.0f);
+        //model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f));
+        //model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));
+        //ourShader.setMat4("model", model2);
+        //ourBackpack.Draw(ourShader);
 
-        glm::mat4 model4 = glm::mat4(1.0f);
-        model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f));
-        model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));
-        ourShader.setMat4("model", model4);
-        ourTrout.Draw(ourShader);
+        //glm::mat4 model3 = glm::mat4(1.0f);
+        //model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f));
+        //model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));
+        //ourShader.setMat4("model", model3);
+        //ourTower.Draw(ourShader);
+
+        //glm::mat4 model4 = glm::mat4(1.0f);
+        //model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f));
+        //model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));
+        //ourShader.setMat4("model", model4);
+        //ourTrout.Draw(ourShader);
 
 
-        glm::mat4 bullet = glm::mat4(1.0f);
-        bullet = glm::translate(bullet, glm::vec3(15.0f, -5.0f, 0.0f)); // setar uma position 
-        bullet = glm::scale(bullet, glm::vec3(0.2f, 0.2f, 0.2f));
-        ourShader.setMat4("model", bullet);
+        //glm::mat4 bullet = glm::mat4(1.0f);
+        //bullet = glm::translate(bullet, glm::vec3(15.0f, -5.0f, 0.0f)); // setar uma position 
+        //bullet = glm::scale(bullet, glm::vec3(0.2f, 0.2f, 0.2f));
+        //ourShader.setMat4("model", bullet);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -226,7 +233,7 @@ int main()
          //   bullet = 
 
             timeBullet -= 1 * deltaTime;
-            ourCube.Draw(ourShader);
+            //ourCube.Draw(ourShader);
         }
 
         glfwSwapBuffers(window);

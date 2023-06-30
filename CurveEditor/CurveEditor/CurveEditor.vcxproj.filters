@@ -5,6 +5,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Points.cpp" />
     <ClCompile Include="CurveControl.cpp" />
+    <ClCompile Include="CurveToOBJ.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
@@ -12,6 +13,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Points.h" />
     <ClInclude Include="CurveControl.h" />
+    <ClInclude Include="CurveToOBJ.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Core\core.frag" />

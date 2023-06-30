@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Points.h"
 #include "CurveControl.h"
+#include "CurveToOBJ.h"
 
 #include <iostream>
 
@@ -35,9 +36,10 @@ Points points;
 
 Shader* ourShader;
 CurveControl* curveControl = new CurveControl();
+CurveToOBJ* curveToOBJ = new CurveToOBJ();
 
 bool teste = false;
-GLuint VAO = 0, VAOBSpline = 0;
+GLuint VAO = 0, VAOBSpline = 0, VAOInternal = 0, VAOExternal = 0;
 int main()
 {
 	// glfw: initialize and configure
@@ -98,11 +100,47 @@ int main()
 	{
 		glfwPollEvents();
 		// per-frame time logic
-		processInput(window);
+		//processInput(window);
+
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		{
+			glfwSetWindowShouldClose(window, true);
+		}	
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+		{
+			float x = 0, y = 0, z = 0;
+			x = ConvertToCartesian(lastX, 0, SCR_WIDTH);
+			y = ConvertToCartesian(lastY, 0, SCR_HEIGHT) * -1;
+			
+			float depthValue;
+			glReadPixels(lastX, lastY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depthValue);
+
+			// Mapear o valor do buffer de profundidade para o intervalo [-1, 1]
+			depthValue = (depthValue * 2.0f) - 1.0f;
+
+
+			points.AddControlPoint(glm::vec3(x, y, z));
+			VAO = curveControl->CreateLines(points);
+
+			if (points.GetControlPoints().size() > 4)
+			{
+				curveControl->CreateBSPline(points);
+				curveControl->CreateInternalPoints(0.2);
+				curveControl->CreateExternalPoints(0.2);
+			}
+				
+
+			std::cout << "Mouse button pressed in " << x << " , " << y << " , " << z << std::endl;
+		}
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		{
+			curveToOBJ->createBSplinePointsTxt(curveControl);
+			curveToOBJ->createObj(curveControl);
+		}
 
 		// render
 		// ------
-		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// view/projection transformations
@@ -120,11 +158,30 @@ int main()
 		glBindVertexArray(0);
 
 		if (points.GetControlPoints().size() > 4) {
+
+			//BSpline
 			ourShader->setVec3("color", glm::vec3(0.0f, 1.0f, 0.0f));
 			VAOBSpline = curveControl->BsplineToVBO();
 			glBindVertexArray(VAOBSpline);
-			glDrawArrays(GL_LINE_STRIP, 0, points.GetControlPoints().size() / 3);
+			glDrawArrays(GL_LINE_STRIP, 0, curveControl->GetBSplinePoints().size() / 3);
 			glBindVertexArray(0);
+
+			//Internal
+
+			ourShader->setVec3("color", glm::vec3(1.0f, 0.0f, 0.0f));
+			VAOInternal = curveControl->InternalToVBO();
+			glBindVertexArray(VAOInternal);
+			glDrawArrays(GL_LINE_STRIP, 0, curveControl->GetInternalPoints().size() / 3);
+			glBindVertexArray(0);
+
+			//External
+
+			ourShader->setVec3("color", glm::vec3(0.0f, 0.0f, 1.0f));
+			VAOExternal = curveControl->ExternalToVBO();
+			glBindVertexArray(VAOExternal);
+			glDrawArrays(GL_LINE_STRIP, 0, curveControl->GetExternalPoints().size() / 3);
+			glBindVertexArray(0);
+
 		}
 
 
@@ -155,7 +212,10 @@ void processInput(GLFWwindow* window) {
 		VAO = curveControl->CreateLines(points);
 
 		if (points.GetControlPoints().size() > 4)
+		{
 			curveControl->CreateBSPline(points);
+		}
+			
 
 		std::cout << "Mouse button pressed in " << x << " , " << y << std::endl;
 	}
