@@ -132,10 +132,19 @@ int main()
 
 			std::cout << "Mouse button pressed in " << x << " , " << y << " , " << z << std::endl;
 		}
-		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 		{
 			curveToOBJ->createBSplinePointsTxt(curveControl);
 			curveToOBJ->createObj(curveControl);
+		}
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		{
+			points.Reset();
+			curveControl->Reset();
+			VAO = 0;
+			VAOBSpline = 0;
+			VAOInternal = 0;
+			VAOExternal = 0;
 		}
 
 		// render

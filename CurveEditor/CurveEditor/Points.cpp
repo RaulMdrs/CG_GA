@@ -25,3 +25,8 @@ void Points::AddControlPoint(glm::vec3 point)
 		controlPoints.push_back(point);		
 	}
 }
+
+void Points::Reset()
+{
+	controlPoints.clear();
+}

@@ -24,5 +24,7 @@ public:
 	void AddControlPoint(glm::vec3 point);
 
 	std::vector<glm::vec3> controlPoints;
+
+	void Reset();
 };
 

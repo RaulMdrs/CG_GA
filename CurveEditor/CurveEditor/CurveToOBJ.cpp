@@ -32,24 +32,19 @@ void CurveToOBJ::createObj(CurveControl* curveControl)
 			<< ExternalPoints[i + 2] * 10 << " " //z
 			<< ExternalPoints[i + 1] << std::endl; //y
 	}
-
-	arq << " " << std::endl;
-
 	//vt
 	arq << "vt " << 0 << " " << 0 << std::endl;
 	arq << "vt " << 1 << " " << 0 << std::endl;
 	arq << "vt " << 1 << " " << 1 << std::endl;
 	arq << "vt " << 0 << " " << 1 << std::endl;
 
-	arq << " " << std::endl;
-
 	//vn
-	for (int i = 0; i < size; i += 3) { //loop through each point: x, y, z
+	for (int i = 0; i < size - 5; i += 3) { //loop through each point: x, y, z
 
-		glm::vec3 A = glm::vec3(InternalPoints[i], InternalPoints[(i + 2) % size], InternalPoints[(i + 1) % size]);
-		glm::vec3 B = glm::vec3(InternalPoints[(i + 3) % size], InternalPoints[(i + 5) % size], InternalPoints[(i + 4) % size]);
-		glm::vec3 C = glm::vec3(ExternalPoints[i], ExternalPoints[(i + 2) % size], ExternalPoints[(i + 1) % size]);
-		glm::vec3 D = glm::vec3(ExternalPoints[(i + 3) % size], ExternalPoints[(i + 5) % size], ExternalPoints[(i + 4) % size]);
+		glm::vec3 A = glm::vec3(InternalPoints[i], InternalPoints[(i + 2)], InternalPoints[(i + 1)]);
+		glm::vec3 B = glm::vec3(InternalPoints[(i + 3)], InternalPoints[(i + 5)], InternalPoints[(i + 4)]);
+		glm::vec3 C = glm::vec3(ExternalPoints[i], ExternalPoints[(i + 2)], ExternalPoints[(i + 1)]);
+		glm::vec3 D = glm::vec3(ExternalPoints[(i + 3)], ExternalPoints[(i + 5)], ExternalPoints[(i + 4)]);
 
 		glm::vec3 AB = createVectorFrom2Points(A, B);
 		glm::vec3 AC = createVectorFrom2Points(A, C);
@@ -84,16 +79,16 @@ void CurveToOBJ::createObj(CurveControl* curveControl)
 	glm::vec3 tex1 = glm::vec3(1, 2, 4);
 	glm::vec3 tex2 = glm::vec3(4, 2, 3);
 
-	for (int i = 1; i < size; i += 3) {
+	for (int i = 1; i < size / 3; i++) {
 		//v1/t1/n1
 
 		arq << "f " << i << "/" << tex1.x << "/" << vnNum << " "
 			<< i + 1 << "/" << tex1.y << "/" << vnNum << " "
-			<< i + size << "/" << tex1.z << "/" << vnNum << std::endl;
+			<< i + (size / 3) << "/" << tex1.z << "/" << vnNum << std::endl;
 
-		arq << "f " << i + size << "/" << tex2.x << "/" << vnNum << " "
+		arq << "f " << i + (size / 3) << "/" << tex2.x << "/" << vnNum << " "
 			<< i + 1 << "/" << tex2.y << "/" << vnNum << " "
-			<< i + size + 1 << "/" << tex2.z << "/" << vnNum << std::endl;
+			<< i + (size / 3) + 1 << "/" << tex2.z << "/" << vnNum << std::endl;
 
 		vnNum++;
 		if (vnNum >= 4) {
@@ -102,8 +97,6 @@ void CurveToOBJ::createObj(CurveControl* curveControl)
 	}
 
 	arq.close();
-
-	std::cout << "Acabei";
 }
 
 glm::vec3 CurveToOBJ::createVectorFrom2Points(glm::vec3 a, glm::vec3 b)
@@ -117,12 +110,12 @@ void CurveToOBJ::createBSplinePointsTxt(CurveControl* curveControl)
 
 	BSplinePoints.clear();
 	BSplinePoints = curveControl->GetBSplinePoints();
-	int size = BSplinePoints.size();
+	int size = BSplinePoints.size() / 3;
 
-	arq << size << " ";
+	arq << size << " " << std::endl;
 
-	for (int i = 0; i < size; i++) {
-		arq << BSplinePoints[i] << " ";
+	for (int i = 0; i < size; i += 3) {
+		arq << BSplinePoints[i] << " " << BSplinePoints[i + 2] << " " << BSplinePoints[i + 1] << std::endl;
 	}
 
 	arq.close();

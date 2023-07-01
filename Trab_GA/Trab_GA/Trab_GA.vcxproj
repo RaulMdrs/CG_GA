@@ -126,11 +126,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animacao.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animacao.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="LeitorOBJ.h" />
     <ClInclude Include="Material.h" />

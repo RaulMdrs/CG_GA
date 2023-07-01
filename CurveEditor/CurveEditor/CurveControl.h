@@ -31,5 +31,7 @@ private:
 	std::vector<float> GetBSplinePoints();
 	std::vector<float> GetInternalPoints();
 	std::vector<float> GetExternalPoints();
+
+	void Reset();
 };
 

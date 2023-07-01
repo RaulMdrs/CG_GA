@@ -66,7 +66,7 @@ void CurveControl::CreateBSPline(Points points)
     }
 
 
-    x = (((-1 * pow(0, 3) + 3 * pow(0, 2) - 3 * 0 + 1) * points.controlPoints[0].x +
+    /*x = (((-1 * pow(0, 3) + 3 * pow(0, 2) - 3 * 0 + 1) * points.controlPoints[0].x +
         (3 * pow(0, 3) - 6 * pow(0, 2) + 4) * points.controlPoints[(0 + 1) % size].x +
         (-3 * pow(0, 3) + 3 * pow(0, 2) + 3 * 0 + 1) * points.controlPoints[(0 + 2) % size].x +
         (1 * pow(0, 3)) * points.controlPoints[(0 + 3) % size].x) / 6);
@@ -83,7 +83,7 @@ void CurveControl::CreateBSPline(Points points)
 
     bSplineCurvePoints.push_back(x);
     bSplineCurvePoints.push_back(y);
-    bSplineCurvePoints.push_back(z);
+    bSplineCurvePoints.push_back(z);*/
 }
 
 void CurveControl::CreateInternalPoints(float thickness)
@@ -122,7 +122,7 @@ void CurveControl::CreateInternalPoints(float thickness)
         internalCurvePoints.push_back(z);
     }
 
-    glm::vec3 p1 = glm::vec3(bSplineCurvePoints[0],
+    /*glm::vec3 p1 = glm::vec3(bSplineCurvePoints[0],
         bSplineCurvePoints[(0 + 1) % size],
         bSplineCurvePoints[(0 + 2) % size]);
     glm::vec3 p2 = glm::vec3(bSplineCurvePoints[(0 + 3) % size],
@@ -146,7 +146,7 @@ void CurveControl::CreateInternalPoints(float thickness)
 
     internalCurvePoints.push_back(x);
     internalCurvePoints.push_back(y);
-    internalCurvePoints.push_back(z);
+    internalCurvePoints.push_back(z);*/
 }
 
 void CurveControl::CreateExternalPoints(float thickness)
@@ -185,12 +185,12 @@ void CurveControl::CreateExternalPoints(float thickness)
         externalCurvePoints.push_back(z);
     }
 
-    glm::vec3 p1 = glm::vec3(bSplineCurvePoints[0],
-        bSplineCurvePoints[(0+ 1) % size],
-        bSplineCurvePoints[(0+ 2) % size]);
-    glm::vec3 p2 = glm::vec3(bSplineCurvePoints[(0+ 3) % size],
-        bSplineCurvePoints[(0+ 4) % size],
-        bSplineCurvePoints[(0+ 5) % size]);
+    /*glm::vec3 p1 = glm::vec3(bSplineCurvePoints[0],
+        bSplineCurvePoints[(0 + 1) % size],
+        bSplineCurvePoints[(0 + 2) % size]);
+    glm::vec3 p2 = glm::vec3(bSplineCurvePoints[(0 + 3) % size],
+        bSplineCurvePoints[(0 + 4) % size],
+        bSplineCurvePoints[(0 + 5) % size]);
 
     width = p2.x - p1.x;
     height = p2.y - p1.y;
@@ -205,11 +205,11 @@ void CurveControl::CreateExternalPoints(float thickness)
 
     x = glm::cos(alpha) * thickness + p1.x;
     y = glm::sin(alpha) * thickness + p1.y;
-    z = bSplineCurvePoints[(0+ 2) % size];
+    z = bSplineCurvePoints[(0 + 2) % size];
 
     externalCurvePoints.push_back(x);
     externalCurvePoints.push_back(y);
-    externalCurvePoints.push_back(z);
+    externalCurvePoints.push_back(z);*/
 }
 
 GLuint CurveControl::BsplineToVBO()
@@ -305,4 +305,12 @@ std::vector<float> CurveControl::GetInternalPoints()
 std::vector<float> CurveControl::GetExternalPoints()
 {
     return externalCurvePoints;
+}
+
+void CurveControl::Reset()
+{
+    bSplineCurvePoints.clear();
+	internalCurvePoints.clear();
+	externalCurvePoints.clear();
+    vertices.clear();
 }

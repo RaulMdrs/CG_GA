@@ -4,6 +4,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Animacao.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture.h" />
@@ -14,6 +15,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="LeitorOBJ.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Animacao.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Core\core.frag" />
