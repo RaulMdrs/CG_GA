@@ -125,8 +125,8 @@ int main()
 			if (points.GetControlPoints().size() > 4)
 			{
 				curveControl->CreateBSPline(points);
-				curveControl->CreateInternalPoints(0.2);
-				curveControl->CreateExternalPoints(0.2);
+				curveControl->CreateInternalPoints(0.1);
+				curveControl->CreateExternalPoints(0.1);
 			}
 				
 

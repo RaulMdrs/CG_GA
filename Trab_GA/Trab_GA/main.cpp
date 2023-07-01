@@ -91,32 +91,17 @@ int main()
 	// load models
 	// -----------
 
-	//Model ourTeapot("Modelos/teapot1.obj");
-	//Model ourCube("Modelos/cube.obj");
-	//Model ourBullet("Modelos/cube.obj");
-	//Model ourBackpack("Modelos/backpack.obj");
-	//Model ourTower("Modelos/torreDiPisa.obj");
-	//Model ourTrout("Modelos/trout.obj");
+	Model ourTeapot("Modelos/teapot1.obj");
+	Model ourCube("Modelos/cube.obj");
+	Model ourBullet("Modelos/cube.obj");
+	Model ourBackpack("Modelos/backpack.obj");
+	Model ourTower("Modelos/torreDiPisa.obj");
+	Model ourTrout("Modelos/trout.obj");
 	Model ourPista("Modelos/track.obj");
 	Model ourCar("Modelos/car.obj");
 
 	animacao->LerPoints("Modelos/bspline.txt");
 	int timeBullet = 0;
-
-	///// Teste de luz abaixo
-
-	//unsigned int VBO;
-	//glGenBuffers(1, &VBO);
-
-	//unsigned int lightCubeVAO;
-	//glGenVertexArrays(1, &lightCubeVAO);
-	//glBindVertexArray(lightCubeVAO);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//// note that we update the lamp's position attribute's stride to reflect the updated buffer data
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(0);
-	///// Teste de luz acima
 	int i = 0;
 
 	glm::mat4 car = glm::mat4(1.0f);
@@ -128,7 +113,7 @@ int main()
 	glm::vec3 target = animacao->GetAnimacaoPoints()[i]; // Target position
 	glm::vec3 translation = glm::vec3(car[3][0], car[3][1], car[3][2]);
 
-	float speed = 0.4f; // Adjust this value to control the speed of movement
+	float speed = 0.1f; // Adjust this value to control the speed of movement
 	float factor = 0.0f; // Initialization of movement factor
 
 
@@ -153,7 +138,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		// TESTE LuZZZZZZZZZZZZZZZZZZ
+		// Light Shader
 		ourShader.use();
 		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
@@ -178,24 +163,8 @@ int main()
 		//  glBindVertexArray(lightCubeVAO);
 		 // glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
-
-		  // TESTE LuZZZZZZZZZZZZZZZZZZ ^^^^^^
-
-
-		  // don't forget to enable shader before setting uniforms
-		//  ourShader.use();
-
-		  // view/projection transformations
-		//  glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		 // glm::mat4 view = camera.GetViewMatrix();
-		  //ourShader.setMat4("projection", projection);
-	   //   ourShader.setMat4("view", view);
-
-		  // render the loaded model
-
 		glm::mat4 pista = glm::mat4(1.0f);
-		pista = glm::translate(pista, glm::vec3(-0.20f, 0.0f, 0.20f));
+		pista = glm::translate(pista, glm::vec3(0.0f, 0.0f, 0.0f));
 		pista = glm::scale(pista, glm::vec3(1.0f, 1.0f, 1.0f));
 		ourShader.setMat4("model", pista);
 		ourPista.Draw(ourShader);
@@ -203,9 +172,25 @@ int main()
 		if (factor < 1.0f) {
 			glm::vec3 interpolatedTranslation = glm::mix(translation, target, factor);
 			car[3] = glm::vec4(interpolatedTranslation, 1.0f); // Update the translation component of the matrix
+
+			// Calculate the direction vector towards the target
+			glm::vec3 direction = glm::normalize(target - interpolatedTranslation);
+
+			// Calculate the up vector for the car (assuming the up direction is (0, 1, 0))
+			glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+			// Calculate the new rotation matrix for the car
+			//glm::mat4 rotation = glm::lookAt(interpolatedTranslation, interpolatedTranslation + direction, up);
+			glm::mat4 model = glm::mat4(1.0f);
+
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			//model *= rotation;
+			model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+			model = glm::translate(model, interpolatedTranslation);
+			ourShader.setMat4("model", model);
 		}
 		ourShader.setVec3("objectColor", 0.0f, 0.0f, 1.0f);
-		ourShader.setMat4("model", car);
+	//	ourShader.setMat4("model", car);
 		ourCar.Draw(ourShader);
 
 		// Increment the factor and update the target when movement is complete
@@ -219,47 +204,48 @@ int main()
 			translation = glm::vec3(car[3][0], car[3][1], car[3][2]);
 			factor = 0.0f;
 		}
-		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-		//ourShader.setMat4("model", model);
-		//ourTeapot.Draw(ourShader);
 
-		//glm::mat4 model1 = glm::mat4(1.0f);
-		//model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f));
-		//model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
-		//ourShader.setMat4("model", model1);
-		//ourCube.Draw(ourShader);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		ourShader.setMat4("model", model);
+		ourTeapot.Draw(ourShader);
 
-		//glm::mat4 model1Bullet = glm::mat4(1.0f);
-		//model1Bullet = glm::translate(model1Bullet, glm::vec3(5.0f, 0.0f, 5.0f));
-		//model1Bullet = glm::scale(model1Bullet, glm::vec3(0.5f, 0.5f, 0.5f));
-		//ourShader.setMat4("model", model1Bullet);
-		//ourBullet.Draw(ourShader);
+		glm::mat4 model1 = glm::mat4(1.0f);
+		model1 = glm::translate(model1, glm::vec3(5.0f, 0.0f, 5.0f));
+		model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
+		ourShader.setMat4("model", model1);
+		ourCube.Draw(ourShader);
 
-		//glm::mat4 model2 = glm::mat4(1.0f);
-		//model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f));
-		//model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));
-		//ourShader.setMat4("model", model2);
-		//ourBackpack.Draw(ourShader);
+		glm::mat4 model1Bullet = glm::mat4(1.0f);
+		model1Bullet = glm::translate(model1Bullet, glm::vec3(5.0f, 0.0f, 5.0f));
+		model1Bullet = glm::scale(model1Bullet, glm::vec3(0.5f, 0.5f, 0.5f));
+		ourShader.setMat4("model", model1Bullet);
+		ourBullet.Draw(ourShader);
 
-		//glm::mat4 model3 = glm::mat4(1.0f);
-		//model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f));
-		//model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));
-		//ourShader.setMat4("model", model3);
-		//ourTower.Draw(ourShader);
+		glm::mat4 model2 = glm::mat4(1.0f);
+		model2 = glm::translate(model2, glm::vec3(-5.0f, 0.0f, -5.0f));
+		model2 = glm::scale(model2, glm::vec3(0.5f, 0.5f, 0.5f));
+		ourShader.setMat4("model", model2);
+		ourBackpack.Draw(ourShader);
 
-		//glm::mat4 model4 = glm::mat4(1.0f);
-		//model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f));
-		//model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));
-		//ourShader.setMat4("model", model4);
-		//ourTrout.Draw(ourShader);
+		glm::mat4 model3 = glm::mat4(1.0f);
+		model3 = glm::translate(model3, glm::vec3(5.0f, 5.0f, 0.0f));
+		model3 = glm::scale(model3, glm::vec3(0.2f, 0.2f, 0.2f));
+		ourShader.setMat4("model", model3);
+		ourTower.Draw(ourShader);
+
+		glm::mat4 model4 = glm::mat4(1.0f);
+		model4 = glm::translate(model4, glm::vec3(-5.0f, -5.0f, 0.0f));
+		model4 = glm::scale(model4, glm::vec3(0.2f, 0.2f, 0.2f));
+		ourShader.setMat4("model", model4);
+		ourTrout.Draw(ourShader);
 
 
-		//glm::mat4 bullet = glm::mat4(1.0f);
-		//bullet = glm::translate(bullet, glm::vec3(15.0f, -5.0f, 0.0f)); // setar uma position 
-		//bullet = glm::scale(bullet, glm::vec3(0.2f, 0.2f, 0.2f));
-		//ourShader.setMat4("model", bullet);
+		glm::mat4 bullet = glm::mat4(1.0f);
+		bullet = glm::translate(bullet, glm::vec3(15.0f, -5.0f, 0.0f)); // setar uma position 
+		bullet = glm::scale(bullet, glm::vec3(0.2f, 0.2f, 0.2f));
+		ourShader.setMat4("model", bullet);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

@@ -110,11 +110,9 @@ void CurveToOBJ::createBSplinePointsTxt(CurveControl* curveControl)
 
 	BSplinePoints.clear();
 	BSplinePoints = curveControl->GetBSplinePoints();
-	int size = BSplinePoints.size() / 3;
+	int size = BSplinePoints.size();
 
-	arq << size << " " << std::endl;
-
-	for (int i = 0; i < size; i += 3) {
+	for (int i = 0; i < size - 3; i += 3) {
 		arq << BSplinePoints[i] << " " << BSplinePoints[i + 2] << " " << BSplinePoints[i + 1] << std::endl;
 	}
 
